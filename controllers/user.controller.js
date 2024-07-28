@@ -139,6 +139,35 @@ const friendRequests = async (req, res) => {
         res.json({ message: e.message })
     }
 }
+
+//Accepting the friend request
+const acceptRequest = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const isRequest = await Friend.findOne({
+            where:{user2:req.session.user.id, user1:id, state:false}
+        });
+        if (!isRequest) {
+            res.status(400).json({ message: "No such request" });
+            return;
+        }
+
+        //if accepted then the requester become the friend and of the seesion user
+
+        await Friend.create({
+            user1: req.session.user.id,
+            user2: id, 
+            state: true
+        });
+
+        isRequest.state = true;
+        await isRequest.save();
+        res.json({ message: "Request accepted" });
+    }
+    catch (e) {
+        res.status(400).json({ message: e.message });
+    }
+}
 export {
     createUser,
 }
