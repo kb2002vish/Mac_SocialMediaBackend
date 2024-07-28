@@ -48,6 +48,34 @@ const deleteAccount = async(req,res)=>{
     }
 }
 
+//login User
+const login = async (req, res) => {
+    if(req.session.auth){
+        res.status(400);
+        res.json({ message: "You are already logged in" });
+        return;
+    }
+    const { email, password } = req.body;
+
+    try {
+        const user = (await Users.findOne({ where: { email } })).dataValues;
+        if (user.password === password) {
+            req.session.auth = true;
+            req.session.user = { email, id: user.id };
+            res.json({ message: "Loggin complete" });
+        }
+        else {
+            req.session.auth = false;
+            res.status(400);
+            res.json({ message: "Wrong Password" })
+        }
+    }
+    catch (e) {
+        res.status(401).json({ message: e.message });
+    }
+
+
+}
 
 
 export {
