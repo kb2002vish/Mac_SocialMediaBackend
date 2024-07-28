@@ -33,6 +33,21 @@ const createUser = async (req, res) => {
 
 }
 
+//Delete Account
+const deleteAccount = async(req,res)=>{
+    try{
+        await Users.destroy({where:{id:req.session.user.id}});
+        req.session.destroy();
+        res.json({message:"Account Deleted"})
+    }
+    catch(e){
+        res.status(500).json({
+            // message:"Something went wrong"
+            message:e.message
+        })
+    }
+}
+
 
 
 export {
