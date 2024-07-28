@@ -152,6 +152,21 @@ const comment = async (req, res) => {
   }
 };
 
+// view friends posts
+const friendsPost = async (req, res) => {
+  try {
+    const friendId = req.params.friendId;
+    const posts = await Post.findAll({
+      where: {
+        userId: friendId,
+      },
+    });
+    res.json(posts);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export {
   create,
 
