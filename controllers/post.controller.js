@@ -119,6 +119,39 @@ const likePost = async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 };
+
+// commenting the post
+const comment = async (req, res) => {
+  const { id, message } = req.body;
+  const userId = req.session.user.id;
+  try {
+    const post = await Post.findOne({ where: { id } });
+
+    // if the post is private then only friend can like it
+    if (!post.dataValues.visibility && post.dataValues.userId != userId) {
+      const postUser = await Users.findOne({ where: { id: userId } });
+      const friend = postUser.dataValues.friendList;
+      //the user who like the post is a friend of the user who post
+      if (!(friend && friend.find((e) => e.id == userId && state))) {
+        return res
+          .status(400)
+          .json({ message: "Only friend have access to this post" });
+      }
+    }
+
+    const comments = post.dataValues.comments;
+    if (comments) {
+      post.comments = [...comments, { userId: req.session.user.id, message }];
+    } else {
+      post.comments = [{ userId: req.session.user.id, message }];
+    }
+    post.save();
+    res.json(post);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+};
+
 export {
   create,
 
