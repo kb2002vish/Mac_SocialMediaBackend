@@ -168,6 +168,27 @@ const acceptRequest = async (req, res) => {
         res.status(400).json({ message: e.message });
     }
 }
+
+//All Friends
+const allFriends = async (req,res) => {
+    try{
+        const sessionUserId = req.session.user.id;
+        const friends = await Friend.findAll({
+            attributes:['user2'],
+            where:{
+                user1:sessionUserId,
+                state:true,
+            },
+        });
+        res.json(friends);
+    }
+    catch(e){
+        res.status(400).json({
+            message:e.message
+        })
+    }
+}
+
 export {
     createUser,
 }
