@@ -83,6 +83,46 @@ const logOut = (req,res)=>{
     res.json({message:"Logout Successful"});
 }
 
+//Add Friends
+const addFriend = async (req, res) => {
+    const { id } = req.params;
+    const sessionUserId = req.session.user.id;
+    if (id == sessionUserId) {
+        res.status(400).json({ message: "Self friend request" });
+        return;
+    }
+    try {
+        const user = await Users.findOne({ where: { id } });
+
+        if (!user) {
+            res.status(400).json({ message: "User not found" });
+            return;
+        }
+        //if already friend request send
+
+        const isRequest = await Friend.findOne({ where: {user1:sessionUserId, user2:id}})
+
+        if(isRequest) {
+            res.status(400).json({ message: "Friend request already sent" });
+            return;
+        }
+
+        //1 side
+        const friend = await Friend.create({user1:sessionUserId, user2:id});
+      
+        
+        if (friend) {
+            res.json({ message: "Friend request sent successfully" });
+        }
+        else{
+            res.status(400).json({ message: "Failed to send friend request" });
+        }
+        
+    }
+    catch (e) {
+        res.json({ message: e.message })
+    }
+}
 export {
     createUser,
 }
