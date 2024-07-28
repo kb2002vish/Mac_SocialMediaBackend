@@ -190,5 +190,5 @@ const allFriends = async (req,res) => {
 }
 
 export {
-    createUser,
+    createUser, login, addFriend, friendRequests, acceptRequest, logOut, deleteAccount, allFriends
 }
