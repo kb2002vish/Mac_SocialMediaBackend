@@ -34,6 +34,11 @@ app.get("/",authenticate,(req,res)=>{
     console.log(req.session.auth);
     res.send("Server is running")
 })
+//Routes
+import userRoute from './routes/user.routes.js'
+import postRoute from "./routes/post.routes.js"
+app.use("/user",userRoute);
+app.use("/post",authenticate,postRoute);
 
 app.listen(PORT,()=>{
     console.log("Server is running at PORT", PORT);
