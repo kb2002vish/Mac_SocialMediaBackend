@@ -85,6 +85,40 @@ const deletePost = async (req, res) => {
   }
 };
 
+//Like the post using post id as params
+const likePost = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.session.user.id;
+  try {
+    const post = await Post.findOne({ where: { id } });
+
+    // if the post is private then only friend can like it
+    if (!post.dataValues.visibility && post.dataValues.userId != userId) {
+      const friend = await Friend.findOne({
+        where: {
+          user1: req.session.user.id,
+          state: true,
+        },
+      });
+
+      if (!friend) {
+        return res
+          .status(400)
+          .json({ message: "Only friend have access to this post" });
+      }
+
+      post.like += 1;
+      post.save();
+      res.json({ message: "Done" });
+    } else {
+      post.like += 1;
+      post.save();
+      res.json({ message: "Done" });
+    }
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+};
 export {
   create,
 
