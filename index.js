@@ -9,6 +9,22 @@ dotenv.config();
 const PORT = process.env.PORT;
 const app = express();
 
+//Maintaining session
+import session from 'express-session';
+
+const store  = new session.MemoryStore();
+app.use(
+    session({
+        secret: process.env.SECRET,
+        saveUninitialized: true,
+        resave: false,
+        cookie: {
+            maxAge: 60000 * 60,
+        },
+        store,
+    })
+);
+
 //Parsers
 app.use(bodyParser.json())
 app.use(cookieParser())
