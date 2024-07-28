@@ -62,6 +62,29 @@ const allPost = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+//Delete the post
+const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findOne({
+      where: { id },
+    });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    if (post.userId != req.session.user.id) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this post" });
+    }
+    await Post.destroy({ where: { id } });
+    res.json({ message: "Post deleted successfully" });
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export {
   create,
 
