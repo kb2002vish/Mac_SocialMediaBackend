@@ -123,6 +123,22 @@ const addFriend = async (req, res) => {
         res.json({ message: e.message })
     }
 }
+
+// All Friend requests
+const friendRequests = async (req, res) => {
+    try {
+        const requests = await Friend.findOne({ where: { user2: req.session.user.id, state: false } });
+        
+        if (!requests)
+            return res.status(200).json({ message: "No Requests" })
+
+        res.json(requests);
+    }
+    catch (e) {
+        res.status(400);
+        res.json({ message: e.message })
+    }
+}
 export {
     createUser,
 }
