@@ -77,6 +77,11 @@ const login = async (req, res) => {
 
 }
 
+//Log out
+const logOut = (req,res)=>{
+    req.session.destroy();
+    res.json({message:"Logout Successful"});
+}
 
 export {
     createUser,
