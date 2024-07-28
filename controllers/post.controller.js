@@ -182,5 +182,11 @@ const getMyPosts = async (req, res) => {
 };
 export {
   create,
-
+  likePost,
+  comment,
+  allPost,
+  friendsPost,
+  getPost,
+  deletePost,
+  getMyPosts,
 };
