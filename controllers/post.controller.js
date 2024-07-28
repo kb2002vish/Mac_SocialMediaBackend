@@ -167,6 +167,19 @@ const friendsPost = async (req, res) => {
   }
 };
 
+//My all Post
+const getMyPosts = async (req, res) => {
+  try {
+    const post = await Post.findAll({
+      where: {
+        userId: req.session.user.id,
+      },
+    });
+    res.json(post);
+  } catch (e) {
+    res.status(500).json({ message: "Something went Wrong" });
+  }
+};
 export {
   create,
 
