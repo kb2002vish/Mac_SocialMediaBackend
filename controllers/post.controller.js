@@ -53,7 +53,15 @@ const getPost = async (req, res) => {
   }
 };
 
-
+//get all posts
+const allPost = async (req, res) => {
+  try {
+    const posts = await Post.findAll({ where: { visibility: true } });
+    res.json(posts);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
 export {
   create,
 
